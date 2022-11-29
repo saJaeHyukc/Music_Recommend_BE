@@ -32,7 +32,7 @@
 
 ## ****🎯 데이터베이스****
 
-![ex_screenshot](./img/song_erd.PNG)
+![ex_screenshot](./img/song_erd.png)
 
 ## ****🎨 API 설계****
 
