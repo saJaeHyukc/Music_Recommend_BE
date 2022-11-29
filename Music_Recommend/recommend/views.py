@@ -15,7 +15,6 @@ class SongListView(APIView):
         listserializer = SongListSerializer([random.choice(song_list) for i in range(12)], many=True)
         return Response(listserializer.data, status=status.HTTP_200_OK)
 
-
 class SongRecommendView(APIView):
     def post(self, request, song_id):
         slt_song = get_list_or_404(Song, id=song_id)
