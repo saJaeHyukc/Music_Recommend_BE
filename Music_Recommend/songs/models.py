@@ -13,6 +13,7 @@ class Song(models.Model):
     likes = models.IntegerField(blank=True)
     image = models.TextField(blank=True)
     genre_no = models.IntegerField(blank=True)
+    youtube_url = models.TextField(blank=True)
     
     song_likes = models.ManyToManyField(User, related_name="like_song",blank=True)
     

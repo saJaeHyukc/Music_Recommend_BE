@@ -67,9 +67,10 @@ class UserSerializer(serializers.ModelSerializer):
 
     #회원정보 수정 update
     def update(self, instance, validated_data):
+        print(instance.nickname)
         instance.nickname = validated_data.get('nickname', instance.nickname)
         instance.profile_image = validated_data.get('profile_image', instance.profile_image)
-
+        print(instance.nickname)
         instance.save()
         return instance
     

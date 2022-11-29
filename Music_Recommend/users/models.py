@@ -36,7 +36,7 @@ class User(AbstractBaseUser):
         unique=True,
         error_messages={'unique': "이미 존재하는 이메일 주소입니다."}   
     )
-    nickname = models.CharField(max_length=15, unique=True, error_messages={'unique': "이미 존재하는 닉네임입니다."} )
+    nickname = models.CharField(max_length=15, unique=True, error_messages={'unique': "이미 존재하는 닉네임입니다."})
     profile_image = models.ImageField(default="default_profile_pic.jpg",upload_to="profile_pics" )
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)

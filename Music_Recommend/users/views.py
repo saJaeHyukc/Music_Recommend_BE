@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
+
 from django.contrib.auth.hashers import check_password
 
 from .jwt_claim_serializer import CustomTokenObtainPairSerializer
@@ -44,6 +46,8 @@ class UserView(APIView):
         return Response({"message":"회원탈퇴 실패"}, status=status.HTTP_400_BAD_REQUEST)
 
 class ChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+    
     #비밀번호 인증
     def post(self, request):
         user = get_object_or_404(User, id=request.user.id)
@@ -61,7 +65,7 @@ class ChangePasswordView(APIView):
                 serializer.save()
                 return Response({"message":"비밀번호 변경이 완료되었습니다! 다시 로그인해주세요."} , status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return Response("접근 권한 없음", status=status.HTTP_403_FORBIDDEN)
+        return Response({"message":"접근 권한 없음"}, status=status.HTTP_403_FORBIDDEN)
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
