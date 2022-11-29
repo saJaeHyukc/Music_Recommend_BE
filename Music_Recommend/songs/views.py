@@ -34,20 +34,16 @@ class SongLikeView(APIView):
 
 #노래 검색
 class SearchView(APIView):
-    permission_classes = [IsAuthenticated] 
-    
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         keyword = request.GET.get('keyword')
-        if keyword =='':
-            return Response("검색 결과가 없습니다.", status=status.HTTP_200_OK)
-        
-        post_result = Song.objects.filter(
-        Q(title__icontains=keyword) |
-        Q(singer__icontains=keyword)|
-        Q(genre__icontains=keyword)
-        )
+        if keyword:
+            post_result = Song.objects.filter(
+            Q(title__icontains=keyword) |
+            Q(singer__icontains=keyword)|
+            Q(genre__icontains=keyword)
+            )
         serializer = SearchSerializer(post_result, many=True)
-    
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -89,7 +85,7 @@ class VoiceDetailView(APIView):
         voice = get_object_or_404(Voice, id=voice_id)
         if request.user == voice.user:
             voice.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_200_OK)
         return Response("접근 권한 없음", status=status.HTTP_403_FORBIDDEN)
     
 #모창 좋아요
@@ -144,6 +140,6 @@ class CommentDetailView(APIView):
         comment= get_object_or_404(Comment, id=comment_id)
         if request.user == comment.user:
             comment.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_200_OK)
         return Response("접근 권한 없음", status=status.HTTP_403_FORBIDDEN)
 

@@ -31,9 +31,14 @@ class VoiceSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     voice_likes = serializers.StringRelatedField(many=True)
     song = serializers.StringRelatedField()
+    profile_image = serializers.SerializerMethodField()
+    
+    def get_profile_image(self, obj):
+        return obj.user.profile_image.url
     
     def get_user(self, obj): 
         return obj.user.nickname
+        
     class Meta:
         model = Voice
         fields = "__all__"
@@ -49,6 +54,7 @@ class SongSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(many=True)
     voices = VoiceSerializer(many=True)
     comments_count = serializers.SerializerMethodField()
+    voices_count = serializers.SerializerMethodField()
 
     def get_song_likes_count(self, obj) :    
         return obj.song_likes.count()
@@ -56,6 +62,9 @@ class SongSerializer(serializers.ModelSerializer):
     def get_comments_count(self, obj) :    
         return obj.comments.count()
     
+    def get_voices_count(self, obj) :    
+        return obj.voices.count()
+
     class Meta:
         model = Song
         fields = "__all__"
