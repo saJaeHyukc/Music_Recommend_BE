@@ -35,8 +35,8 @@
 ![ex_screenshot](./img/song_erd.png)
 
 ## ****🎨 API 설계****
-![ex_screenshot](./img/API_User.PNG)
-![ex_screenshot](./img/API_Song01.PNG)
-![ex_screenshot](./img/API_Song02.PNG)
-![ex_screenshot](./img/API_Playlist.PNG)
+![ex_screenshot](./img/API_User.png)
+![ex_screenshot](./img/API_Song01.png)
+![ex_screenshot](./img/API_Song02.png)
+![ex_screenshot](./img/API_Playlist.png)
 
