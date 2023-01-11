@@ -1,7 +1,11 @@
 from rest_framework import serializers
 from django.contrib.auth.hashers import check_password
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import smart_bytes, force_str
 
 from .models import User
+from .utils import Util
 from .validators import contains_special_character, contains_uppercase_letter, contains_lowercase_letter, contains_number
 
 class UserSerializer(serializers.ModelSerializer):
@@ -119,3 +123,31 @@ class ProfileViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = "__all__"
+        
+# 비밀번호 찾기 serializer
+class PasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField(error_messages={"required": "이메일을 입력해주세요.", "blank": "이메일을 입력해주세요.", "invalid": "알맞은 형식의 이메일을 입력해주세요.",})
+
+    class Meta:
+        fields = ("email",)
+
+    def validate(self, attrs):
+        email = attrs.get("email")
+
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email=email)
+            uidb64 = urlsafe_base64_encode(smart_bytes(user.id))
+            token = PasswordResetTokenGenerator().make_token(user)  
+
+            frontend_site = "www.127:0.0.1:5500"
+            absurl = f"http://{frontend_site}/set_password.html?/{uidb64}/{token}/"  
+            email_body = "안녕하세요? \n 비밀번호 재설정 주소입니다.\n" + absurl  
+            message = {
+                "email_body": email_body,
+                "to_email": user.email,
+                "email_subject": "비밀번호 재설정",
+            }
+            Util.send_email(message)
+
+            return super().validate(attrs)
+        raise serializers.ValidationError(detail={"email": "잘못된 이메일입니다. 다시 입력해주세요."})
