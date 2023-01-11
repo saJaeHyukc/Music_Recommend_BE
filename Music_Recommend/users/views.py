@@ -99,3 +99,12 @@ class PasswordTokenCheckView(APIView):
 
         except DjangoUnicodeDecodeError as identifier:
             return Response({"message": "링크가 유효하지 않습니다."}, status=status.HTTP_401_UNAUTHORIZED)
+
+# 비밀번호 재설정
+class SetNewPasswordView(APIView):
+
+    def put(self, request):
+        serializer = SetNewPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            return Response({"message": "비밀번호 재설정 완료"}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

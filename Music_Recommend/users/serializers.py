@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers, exceptions
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -151,3 +151,44 @@ class PasswordResetSerializer(serializers.Serializer):
 
             return super().validate(attrs)
         raise serializers.ValidationError(detail={"email": "잘못된 이메일입니다. 다시 입력해주세요."})
+    
+# 비밀번호 재설정 serializer
+class SetNewPasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(error_messages={"required": "비밀번호를 입력해주세요.", "blank": "비밀번호를 입력해주세요.", "write_only": True,})
+    repassword = serializers.CharField(error_messages={"required": "비밀번호를 입력해주세요.", "blank": "비밀번호를 입력해주세요.", "write_only": True,})
+    token = serializers.CharField(max_length=100, write_only=True)
+    uidb64 = serializers.CharField(max_length=100, write_only=True)
+
+    class Meta:
+        fields = ("repassword", "password", "token", "uidb64",)
+
+    def validate(self, attrs):
+        password = attrs.get("password")
+        repassword = attrs.get("repassword")
+        token = attrs.get("token")
+        uidb64 = attrs.get("uidb64")
+
+        user_id = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(id=user_id)
+
+        # 토큰이 유효여부
+        if PasswordResetTokenGenerator().check_token(user, token) == False:
+            raise exceptions.AuthenticationFailed("링크가 유효하지 않습니다.", 401)
+        
+        #비밀번호 일치
+        if password != repassword:
+            raise serializers.ValidationError(detail={"password":"비밀번호가 일치하지 않습니다."})
+        
+        #비밀번호 유효성 검사
+        if ( len(password) < 8 or len(password) > 17 
+                or not contains_uppercase_letter(password)
+                or not contains_lowercase_letter(password)
+                or not contains_number(password) 
+                or not contains_special_character(password) 
+                ):
+            raise serializers.ValidationError(detail={"password":"비밀번호는 8자 이상 16자이하의 영문 대/소문자, 숫자, 특수문자 조합이어야 합니다. "})
+            
+        user.set_password(password)
+        user.save()
+
+        return super().validate(attrs)
