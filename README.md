@@ -85,9 +85,9 @@
 
 ## 6. 트러블 슈팅
 ### 6.1. Email 전송 속도 향상(멀티스레드 적용)
+[상세설명](https://bolder-starburst-a73.notion.site/Email-0bfc032023d345eabfe3818fc87ac98c)
 
 - 문제: 비밀번호 찾기 기능 구현 중 이메일 전송 속도 느림
-- 문제의 원인: 스레드를 하나를 이용하기에 느린 것으로 파악
 <details>
 <summary><b>기존 코드</b></summary>
 <div markdown="1">
