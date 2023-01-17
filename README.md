@@ -1,6 +1,7 @@
-# :pushpin:노래 추천 프로젝트
+# :pushpin:하루종일 듣고 싶어!
 >노래 추천 서비스
- 
+
+### [팀 Github](https://github.com/1TEAM12/Music_Recommend_BE)
 
 </br>
 
@@ -208,7 +209,6 @@ extra_kwargs=
 - 해결: 기획설명과 멜론 100위 크롤링 데이터를 준비하여 설득하여 납득 후 주제 결정
 - 깨달은 점: 추상적인 아이디어를 내는 것보다 정확한 데이터와 설명으로 설득할 수 있다는 점
 
-![download](./melon_data%20.csv)
 <details>
 <summary><b>크롤링 코드</b></summary>
 <div markdown="1">
