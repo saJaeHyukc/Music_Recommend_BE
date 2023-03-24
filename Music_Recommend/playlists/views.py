@@ -30,35 +30,35 @@ class PlaylistDetailView(APIView):
     permission_classes = [IsAuthenticated]
     
     #플레이리스트에 노래 여러 개 추가
-     def post(self, request, playlist_id):
-         song_list = list(request.data["id"]) #id값으로 전달
-         playlist_detail = get_object_or_404(Playlist, id=playlist_id).playlist_detail #해당 플레이리스트 가져옴
-         exist_list = [] #중복 곡
-         add_list =[] #추가 곡
-         for i in range(len(song_list)):
-             song = Song.objects.get(id=song_list[i])
-             if playlist_detail.filter(id=song_list[i]).exists():
+    def post(self, request, playlist_id):
+        song_list = list(request.data["id"]) #id값으로 전달
+        playlist_detail = get_object_or_404(Playlist, id=playlist_id).playlist_detail #해당 플레이리스트 가져옴
+        exist_list = [] #중복 곡
+        add_list =[] #추가 곡
+        for i in range(len(song_list)):
+            song = Song.objects.get(id=song_list[i])
+            if playlist_detail.filter(id=song_list[i]).exists():
                 exist_list.append(song) #중복 곡 존재하면 exist_list에 추가
-             else:
-                 add_list.append(song) #없으면 add_list에 추가
-                 playlist_detail.add(song) #해당 플레이리스트에 곡 추가
+            else:
+                add_list.append(song) #없으면 add_list에 추가
+                playlist_detail.add(song) #해당 플레이리스트에 곡 추가
                 
-         if len(exist_list) == 1 & len(add_list) == 0: 
-             return Response(f"'{exist_list[0].singer}의 {exist_list[0].title}'(이)가 플레이리스트에 이미 추가되어있음", status=status.HTTP_200_OK) 
+        if len(exist_list) == 1 & len(add_list) == 0: 
+            return Response(f"'{exist_list[0].singer}의 {exist_list[0].title}'(이)가 플레이리스트에 이미 추가되어있음", status=status.HTTP_200_OK) 
         
-         elif len(exist_list) == 1 & len(add_list) == 1:
-             return Response(f"'{exist_list[0].singer}의 {exist_list[0].title}'(이)가 플레이리스트에 이미 추가되어있며 '{add_list[0].singer}의 {add_list[0].title}'곡이 추가되었음", status=status.HTTP_200_OK) 
+        elif len(exist_list) == 1 & len(add_list) == 1:
+            return Response(f"'{exist_list[0].singer}의 {exist_list[0].title}'(이)가 플레이리스트에 이미 추가되어있며 '{add_list[0].singer}의 {add_list[0].title}'곡이 추가되었음", status=status.HTTP_200_OK) 
         
-         elif len(exist_list) == 1 & len(add_list) > 1:
-             return Response(f"'{exist_list[0].singer}의 {exist_list[0].title}'(이)가 플레이리스트에 이미 추가되어있며 {len(add_list)}곡이 추가되었음 ", status=status.HTTP_200_OK) 
+        elif len(exist_list) == 1 & len(add_list) > 1:
+            return Response(f"'{exist_list[0].singer}의 {exist_list[0].title}'(이)가 플레이리스트에 이미 추가되어있며 {len(add_list)}곡이 추가되었음 ", status=status.HTTP_200_OK) 
 
-         elif len(exist_list) > 1 & len(add_list) == 0:
-             return Response(f"'{exist_list[0].singer}의 {exist_list[0].title}' 외 {len(exist_list)-1} 곡이 플레이리스트에 이미 추가되어있음", status=status.HTTP_200_OK)
+        elif len(exist_list) > 1 & len(add_list) == 0:
+            return Response(f"'{exist_list[0].singer}의 {exist_list[0].title}' 외 {len(exist_list)-1} 곡이 플레이리스트에 이미 추가되어있음", status=status.HTTP_200_OK)
         
-         elif len(exist_list) > 1:
-             return Response(f"'{exist_list[0].singer}의 {exist_list[0].title}' 외 {len(exist_list)-1} 곡이 플레이리스트에 이미 추가되어있으며 {len(add_list)}곡이 추가되었음", status=status.HTTP_200_OK) 
+        elif len(exist_list) > 1:
+            return Response(f"'{exist_list[0].singer}의 {exist_list[0].title}' 외 {len(exist_list)-1} 곡이 플레이리스트에 이미 추가되어있으며 {len(add_list)}곡이 추가되었음", status=status.HTTP_200_OK) 
         
-         return Response(f"플레이리스트에 노래 {len(add_list)}곡이 추가됨", status=status.HTTP_200_OK)
+        return Response(f"플레이리스트에 노래 {len(add_list)}곡이 추가됨", status=status.HTTP_200_OK)
 
     #플레이리스트 상세페이지
     def get(self, request, playlist_id):

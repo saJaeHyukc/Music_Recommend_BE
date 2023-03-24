@@ -80,7 +80,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 class PasswordResetView(APIView):
 
     def post(self, request):
-        serializer = PasswordResetSerializer(data=request.data, context={"request": request})
+        serializer = PasswordResetSerializer(data=request.data)
         if serializer.is_valid():
             return Response({"message": "비밀번호 재설정 이메일을 발송했습니다. 확인부탁드립니다."}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
