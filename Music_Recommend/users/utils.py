@@ -13,6 +13,9 @@ class EmailThread(threading.Thread):
     def run(self):
         try:
             self.email.send()
+            print(dir(self.email))
+            print('Response headers:', self.email.extra_headers)
+
             
         except Exception as e:
             raise e 
@@ -20,7 +23,7 @@ class EmailThread(threading.Thread):
 class EmailUtil:
 
     @staticmethod
-    def send_async_email(message):
+    def send_email(message):
         email = EmailMessage(
             subject=message["email_subject"],
             body=message["email_body"],

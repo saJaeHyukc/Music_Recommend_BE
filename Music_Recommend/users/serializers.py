@@ -147,7 +147,7 @@ class PasswordResetSerializer(serializers.Serializer):
                 "to_email": user.email,
                 "email_subject": "비밀번호 재설정",
             }
-            EmailUtil.send_async_email(message)
+            EmailUtil.send_email(message)
 
             return super().validate(attrs)
         raise serializers.ValidationError(detail={"email": "잘못된 이메일입니다. 다시 입력해주세요."})
